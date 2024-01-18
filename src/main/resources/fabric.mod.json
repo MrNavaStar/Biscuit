@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "transferapi",
+  "version": "${version}",
+  "name": "TransferAPI",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/ethan/TransferAPI"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/transferapi/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.mrnavastar.transferapi.TransferAPI"
+    ]
+  },
+  "mixins": [
+    "transferapi.mixins.json"
+  ],
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_3222": ["me/mrnavastar/transferapi/api/ServerTransferable"]
+
+    }
+  },
+  "depends": {
+  }
+}
