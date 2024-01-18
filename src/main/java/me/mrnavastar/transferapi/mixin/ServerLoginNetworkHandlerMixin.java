@@ -1,12 +1,15 @@
 package me.mrnavastar.transferapi.mixin;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
+import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.TransferAPI;
 import me.mrnavastar.transferapi.interfaces.CookieStore;
-import net.minecraft.class_9088;
-import net.minecraft.class_9091;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket;
+import net.minecraft.network.packet.s2c.common.CookieRequestS2CPacket;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,28 +17,25 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
-
 @Mixin(ServerLoginNetworkHandler.class)
 public class ServerLoginNetworkHandlerMixin {
 
     @Shadow @Final private ClientConnection connection;
+    @Shadow private GameProfile profile;
 
     @Inject(method = "sendSuccessPacket", at = @At("HEAD"))
     private void requestCookies(GameProfile profile, CallbackInfo ci) {
-        TransferAPI.getRegisteredCookies().forEach(id -> connection.send(new class_9088(id)));
+        TransferAPI.getRegisteredCookies().forEach(id -> connection.send(new CookieRequestS2CPacket(id)));
     }
 
-    /*@Inject(method = "onEnterConfiguration", at = @At("TAIL"))
-    private void copyCookies(EnterConfigurationC2SPacket packet, CallbackInfo ci, @Local ServerConfigurationNetworkHandler networkHandler) {
-        ((CookieStore) networkHandler).copyCookies(cookies);
-    }*/
-
-    @Inject(method = "method_55851", at = @At("HEAD"), cancellable = true)
-    private void onCookieResponse(class_9091 arg, CallbackInfo ci) {
-        System.out.println("COOKIE RESPONSE: " + Arrays.toString(arg.payload()));
-        ((CookieStore) connection).getStore().put(arg.key(), arg.payload());
-        ci.cancel();
+    @Inject(method = "onCookieResponse", at = @At("HEAD"))
+    private void storeCookie(CookieResponseC2SPacket packet, CallbackInfo ci) {
+        ((CookieStore) connection).fabric_getStore().put(packet.key(), packet.payload());
+        ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(profile, packet);
     }
 
+    @WrapWithCondition(method = "onCookieResponse", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))
+    private boolean cancelDisconnect(ServerLoginNetworkHandler instance, Text reason) {
+        return false;
+    }
 }

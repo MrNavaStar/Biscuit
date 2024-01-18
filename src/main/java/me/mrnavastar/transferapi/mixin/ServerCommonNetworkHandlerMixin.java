@@ -1,11 +1,15 @@
 package me.mrnavastar.transferapi.mixin;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.mojang.authlib.GameProfile;
 import lombok.Getter;
+import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.interfaces.ConnectionGrabber;
 import me.mrnavastar.transferapi.interfaces.CookieStore;
-import net.minecraft.class_9091;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket;
 import net.minecraft.server.network.ServerCommonNetworkHandler;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,18 +17,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
-
 @Getter
 @Mixin(ServerCommonNetworkHandler.class)
 public abstract class ServerCommonNetworkHandlerMixin implements CookieStore, ConnectionGrabber {
 
     @Shadow @Final protected ClientConnection connection;
+    @Shadow protected abstract GameProfile getProfile();
 
-    @Inject(method = "method_55851", at = @At("HEAD"), cancellable = true)
-    private void onCookieResponse(class_9091 arg, CallbackInfo ci) {
-        System.out.println("COOKIE RESPONSE: " + Arrays.toString(arg.payload()));
-        ((CookieStore) connection).getStore().put(arg.key(), arg.payload());
-        ci.cancel();
+    @Inject(method = "onCookieResponse", at = @At("HEAD"))
+    private void storeCookie(CookieResponseC2SPacket packet, CallbackInfo ci) {
+        ((CookieStore) connection).fabric_getStore().put(packet.key(), packet.payload());
+        ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(getProfile(), packet);
+    }
+
+    @WrapWithCondition(method = "onCookieResponse", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerCommonNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))
+    private boolean cancelDisconnect(ServerCommonNetworkHandler instance, Text reason) {
+        return false;
     }
 }

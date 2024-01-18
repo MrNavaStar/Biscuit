@@ -15,7 +15,7 @@ public class ClientConnectionMixin implements CookieStore {
     private final HashMap<Identifier, byte[]> cookies = new HashMap<>();
 
     @Override
-    public HashMap<Identifier, byte[]> getStore() {
+    public HashMap<Identifier, byte[]> fabric_getStore() {
         return cookies;
     }
 }

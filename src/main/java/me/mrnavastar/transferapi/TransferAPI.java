@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.mrnavastar.transferapi.commands.DebugCommands;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
@@ -20,6 +19,11 @@ public class TransferAPI implements ModInitializer {
     public void onInitialize() {
         //if (FabricLoader.getInstance().isDevelopmentEnvironment())
             ServerLifecycleEvents.SERVER_STARTED.register(server -> DebugCommands.init(server.getCommandManager().getDispatcher()));
+
+            ServerTransferEvents.BEFORE_TRANSFER.register(player -> {
+
+                return true;
+            });
     }
 
     public static void registerCookie(Identifier identifier) {

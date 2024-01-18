@@ -4,6 +4,5 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 
 public interface CookieStore {
-    HashMap<Identifier, byte[]> getStore();
-    //void copyCookies(HashMap<Identifier, byte[]> cookies);
+    HashMap<Identifier, byte[]> fabric_getStore();
 }
