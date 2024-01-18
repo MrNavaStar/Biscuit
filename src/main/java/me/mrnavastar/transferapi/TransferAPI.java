@@ -6,14 +6,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 public class TransferAPI implements ModInitializer {
 
     @Getter
     private static boolean transferOnly = false;
-    private static final HashSet<Identifier> registeredCookieIds = new HashSet<>();
+    private static final HashMap<Identifier, String> registeredCookieIds = new HashMap<>();
 
     @Override
     public void onInitialize() {
@@ -22,10 +22,14 @@ public class TransferAPI implements ModInitializer {
     }
 
     public static void registerCookie(Identifier identifier) {
-        registeredCookieIds.add(identifier);
+        registeredCookieIds.put(identifier, "");
+    }
+
+    public static void registerCookie(Identifier identifier, String secret) {
+        registeredCookieIds.put(identifier, secret);
     }
 
     public static List<Identifier> getRegisteredCookies() {
-        return registeredCookieIds.stream().toList();
+        return registeredCookieIds.keySet().stream().toList();
     }
 }

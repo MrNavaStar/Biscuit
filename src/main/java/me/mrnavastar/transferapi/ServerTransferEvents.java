@@ -23,8 +23,9 @@ public class ServerTransferEvents {
 
     public static final Event<CookieResponse> COOKIE_RESPONSE = EventFactory.createArrayBacked(CookieResponse.class, callbacks -> (profile, packet) -> {
         for (CookieResponse callback : callbacks) {
-            callback.onCookieResponse(profile, packet);
+            if (callback.onCookieResponse(profile, packet)) return false;
         }
+        return true;
     });
 
     @FunctionalInterface
@@ -39,6 +40,6 @@ public class ServerTransferEvents {
 
     @FunctionalInterface
     public interface CookieResponse {
-        void onCookieResponse(GameProfile profile, CookieResponseC2SPacket packet);
+        boolean onCookieResponse(GameProfile profile, CookieResponseC2SPacket packet);
     }
 }

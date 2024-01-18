@@ -30,8 +30,8 @@ public class ServerLoginNetworkHandlerMixin {
 
     @Inject(method = "onCookieResponse", at = @At("HEAD"))
     private void storeCookie(CookieResponseC2SPacket packet, CallbackInfo ci) {
-        ((CookieStore) connection).fabric_getStore().put(packet.key(), packet.payload());
-        ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(profile, packet);
+        if (ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(profile, packet))
+            ((CookieStore) connection).fabric_getStore().put(packet.key(), packet.payload());
     }
 
     @WrapWithCondition(method = "onCookieResponse", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))
