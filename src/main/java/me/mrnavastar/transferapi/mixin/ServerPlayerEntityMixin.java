@@ -2,9 +2,8 @@ package me.mrnavastar.transferapi.mixin;
 
 import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.interfaces.ConnectionGrabber;
-import me.mrnavastar.transferapi.interfaces.CookieStore;
+import me.mrnavastar.transferapi.interfaces.TransferMeta;
 import me.mrnavastar.transferapi.api.ServerTransferable;
-import net.minecraft.network.packet.s2c.common.CookieRequestS2CPacket;
 import net.minecraft.network.packet.s2c.common.ServerTransferS2CPacket;
 import net.minecraft.network.packet.s2c.common.StoreCookieS2CPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -40,13 +39,18 @@ public class ServerPlayerEntityMixin implements ServerTransferable {
     }
 
     @Override
+    public boolean wasTransferred() {
+        return ((TransferMeta)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_wasTransferred().get();
+    }
+
+    @Override
     public void setCookieData(Identifier identifier, byte[] payload) {
         networkHandler.sendPacket(new StoreCookieS2CPacket(identifier, payload));
-        ((CookieStore)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_getStore().put(identifier, payload);
+        ((TransferMeta)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_getCookieStore().put(identifier, payload);
     }
 
     @Override
     public byte[] getCookieData(Identifier identifier) {
-        return ((CookieStore)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_getStore().getOrDefault(identifier, new byte[]{});
+        return ((TransferMeta)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_getCookieStore().getOrDefault(identifier, new byte[]{});
     }
 }

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
 import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.TransferAPI;
-import me.mrnavastar.transferapi.interfaces.CookieStore;
+import me.mrnavastar.transferapi.interfaces.TransferMeta;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket;
 import net.minecraft.network.packet.s2c.common.CookieRequestS2CPacket;
@@ -31,7 +31,7 @@ public class ServerLoginNetworkHandlerMixin {
     @Inject(method = "onCookieResponse", at = @At("HEAD"))
     private void storeCookie(CookieResponseC2SPacket packet, CallbackInfo ci) {
         if (ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(profile, packet))
-            ((CookieStore) connection).fabric_getStore().put(packet.key(), packet.payload());
+            ((TransferMeta) connection).fabric_getCookieStore().put(packet.key(), packet.payload());
     }
 
     @WrapWithCondition(method = "onCookieResponse", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))

@@ -11,6 +11,8 @@ public interface ServerTransferable {
     void transferToServer(URL address);
     void transferToServer(InetSocketAddress address);
 
+    boolean wasTransferred();
+
     void setCookieData(Identifier identifier, byte[] payload);
 
     byte[] getCookieData(Identifier identifier);
