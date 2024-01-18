@@ -42,7 +42,7 @@ public class ServerPlayerEntityMixin implements ServerTransferable {
     @Override
     public void setCookieData(Identifier identifier, byte[] payload) {
         networkHandler.sendPacket(new StoreCookieS2CPacket(identifier, payload));
-        networkHandler.sendPacket(new CookieRequestS2CPacket(identifier));
+        ((CookieStore)((ConnectionGrabber) networkHandler).fabric_getConnection()).fabric_getStore().put(identifier, payload);
     }
 
     @Override

@@ -19,11 +19,6 @@ public class TransferAPI implements ModInitializer {
     public void onInitialize() {
         //if (FabricLoader.getInstance().isDevelopmentEnvironment())
             ServerLifecycleEvents.SERVER_STARTED.register(server -> DebugCommands.init(server.getCommandManager().getDispatcher()));
-
-            ServerTransferEvents.BEFORE_TRANSFER.register(player -> {
-
-                return true;
-            });
     }
 
     public static void registerCookie(Identifier identifier) {
