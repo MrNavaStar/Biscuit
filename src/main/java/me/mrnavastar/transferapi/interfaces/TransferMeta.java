@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface TransferMeta {
+
     HashMap<Identifier, byte[]> fabric_getCookieStore();
-    AtomicBoolean fabric_wasTransferred();
+
+    void fabric_setTransferred();
 }

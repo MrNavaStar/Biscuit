@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 
 public class ServerTransferEvents {
 
@@ -21,9 +22,9 @@ public class ServerTransferEvents {
         }
     });
 
-    public static final Event<CookieResponse> COOKIE_RESPONSE = EventFactory.createArrayBacked(CookieResponse.class, callbacks -> (profile, packet) -> {
+    public static final Event<CookieResponse> COOKIE_RESPONSE = EventFactory.createArrayBacked(CookieResponse.class, callbacks -> (profile, cookieId, cookie) -> {
         for (CookieResponse callback : callbacks) {
-            if (callback.onCookieResponse(profile, packet)) return false;
+            if (callback.onCookieResponse(profile, cookieId, cookie)) return false;
         }
         return true;
     });
@@ -40,6 +41,6 @@ public class ServerTransferEvents {
 
     @FunctionalInterface
     public interface CookieResponse {
-        boolean onCookieResponse(GameProfile profile, CookieResponseC2SPacket packet);
+        boolean onCookieResponse(GameProfile profile, Identifier cookieId, byte[] cookie);
     }
 }

@@ -8,12 +8,18 @@ import java.net.URL;
 public interface ServerTransferable {
 
     void transferToServer(String host, int port);
-    void transferToServer(URL address);
-    void transferToServer(InetSocketAddress address);
+
+    default void transferToServer(URL address) {
+        transferToServer(address.getHost(), address.getPort());
+    }
+
+    default void transferToServer(InetSocketAddress address) {
+        transferToServer(address.getHostName(), address.getPort());
+    }
 
     boolean wasTransferred();
 
-    void setCookieData(Identifier identifier, byte[] payload);
+    void setCookie(Identifier cookieId, byte[] cookie);
 
-    byte[] getCookieData(Identifier identifier);
+    byte[] getCookie(Identifier cookieId);
 }

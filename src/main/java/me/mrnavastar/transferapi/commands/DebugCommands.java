@@ -4,15 +4,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import me.mrnavastar.transferapi.TransferAPI;
+import me.mrnavastar.transferapi.CookieRegistry;
 import me.mrnavastar.transferapi.api.ServerTransferable;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.Arrays;
 
 public class DebugCommands {
 
@@ -32,7 +30,7 @@ public class DebugCommands {
                         .executes(DebugCommands::getCookieData)
         );
 
-        TransferAPI.registerCookie(new Identifier("multiplex:test"));
+        CookieRegistry.registerCookie(new Identifier("multiplex:test"));
     }
 
     private static int transfer(CommandContext<ServerCommandSource> context, String address, int port) {
@@ -43,13 +41,13 @@ public class DebugCommands {
 
     private static int setCookieData(CommandContext<ServerCommandSource> context, String data) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        ((ServerTransferable) player).setCookieData(new Identifier("multiplex:test"), data.getBytes());
+        ((ServerTransferable) player).setCookie(new Identifier("multiplex:test"), data.getBytes());
         return 0;
     }
 
     private static int getCookieData(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        player.sendMessage(Text.of(new String(((ServerTransferable) player).getCookieData(new Identifier("multiplex:test")))));
+        player.sendMessage(Text.of(new String(((ServerTransferable) player).getCookie(new Identifier("multiplex:test")))));
         return 0;
     }
 }
