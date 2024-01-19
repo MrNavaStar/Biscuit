@@ -2,7 +2,6 @@ package me.mrnavastar.transferapi.mixin;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
-import lombok.Getter;
 import me.mrnavastar.transferapi.CookieRegistry;
 import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.api.ServerTransferable;
@@ -19,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Getter
 @Mixin(ServerCommonNetworkHandler.class)
 public abstract class ServerCommonNetworkHandlerMixin implements ServerTransferable {
 
