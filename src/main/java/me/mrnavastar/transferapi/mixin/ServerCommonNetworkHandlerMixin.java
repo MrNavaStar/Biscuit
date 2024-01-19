@@ -52,7 +52,7 @@ public abstract class ServerCommonNetworkHandlerMixin implements ServerTransfera
         if (cookie == null) return; // TODO: Fire an event maybe???
 
         if (ServerTransferEvents.COOKIE_RESPONSE.invoker().onCookieResponse(getProfile(), packet.key(), cookie))
-            ((TransferMeta) connection).fabric_getCookieStore().put(packet.key(), packet.payload());
+            ((TransferMeta) connection).fabric_getCookieStore().put(packet.key(), cookie);
     }
 
     @WrapWithCondition(method = "onCookieResponse", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerCommonNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))

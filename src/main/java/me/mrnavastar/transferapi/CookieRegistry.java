@@ -29,12 +29,16 @@ public class CookieRegistry implements ModInitializer {
         });*/
     }
 
+    public static void registerCookie(Identifier cookieId, byte[] secret) {
+        registeredCookies.put(cookieId, secret);
+    }
+
     public static void registerCookie(Identifier cookieId) {
-        registeredCookies.put(cookieId, new byte[]{});
+        registerCookie(cookieId, new byte[]{});
     }
 
     public static void registerCookie(Identifier cookieId, String secret) {
-        registeredCookies.put(cookieId, secret.getBytes(StandardCharsets.UTF_8));
+        registerCookie(cookieId, secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public static void unregisterCookie(Identifier cookieId) {

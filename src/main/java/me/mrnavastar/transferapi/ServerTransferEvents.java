@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 public class ServerTransferEvents {
 
-    public static final Event<BeforeServerTransfer> BEFORE_TRANSFER = EventFactory.createArrayBacked(BeforeServerTransfer.class, callbacks -> player -> {
+    /*public static final Event<BeforeServerTransfer> BEFORE_TRANSFER = EventFactory.createArrayBacked(BeforeServerTransfer.class, callbacks -> player -> {
         for (BeforeServerTransfer callback : callbacks) {
             if (!callback.beforeServerTransfer(player)) return false;
         }
@@ -20,7 +20,7 @@ public class ServerTransferEvents {
         for (AfterServerTransfer callback : callbacks) {
             callback.afterServerTransfer(player);
         }
-    });
+    });*/
 
     public static final Event<CookieResponse> COOKIE_RESPONSE = EventFactory.createArrayBacked(CookieResponse.class, callbacks -> (profile, cookieId, cookie) -> {
         for (CookieResponse callback : callbacks) {
@@ -29,7 +29,7 @@ public class ServerTransferEvents {
         return true;
     });
 
-    @FunctionalInterface
+    /*@FunctionalInterface
     public interface BeforeServerTransfer {
         boolean beforeServerTransfer(ServerPlayerEntity player);
     }
@@ -37,7 +37,7 @@ public class ServerTransferEvents {
     @FunctionalInterface
     public interface AfterServerTransfer {
         void afterServerTransfer(ServerPlayerEntity player);
-    }
+    }*/
 
     @FunctionalInterface
     public interface CookieResponse {

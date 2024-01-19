@@ -35,9 +35,9 @@ public abstract class ClientConnectionMixin implements TransferMeta, ServerTrans
 
     @Override
     public void transferToServer(String host, int port) {
-        if (!ServerTransferEvents.BEFORE_TRANSFER.invoker().beforeServerTransfer((ServerPlayerEntity) (Object) this)) return;
+        //if (!ServerTransferEvents.BEFORE_TRANSFER.invoker().beforeServerTransfer((ClientConnection) (Object) this)) return;
         send(new ServerTransferS2CPacket(host, port));
-        ServerTransferEvents.AFTER_TRANSFER.invoker().afterServerTransfer((ServerPlayerEntity) (Object) this);
+        //ServerTransferEvents.AFTER_TRANSFER.invoker().afterServerTransfer((ServerPlayerEntity) (Object) this);
     }
 
     @Override
@@ -47,10 +47,10 @@ public abstract class ClientConnectionMixin implements TransferMeta, ServerTrans
 
     @Override
     public void setCookie(Identifier cookieId, byte[] cookie) {
-        cookie = CookieRegistry.signCookie(cookieId, cookie);
-        if (cookie == null) return;
+        byte[] signedCookie = CookieRegistry.signCookie(cookieId, cookie);
+        if (signedCookie == null) return;
 
-        send(new StoreCookieS2CPacket(cookieId, cookie));
+        send(new StoreCookieS2CPacket(cookieId, signedCookie));
         cookies.put(cookieId, cookie);
     }
 

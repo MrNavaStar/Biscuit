@@ -30,7 +30,7 @@ public class DebugCommands {
                         .executes(DebugCommands::getCookieData)
         );
 
-        CookieRegistry.registerCookie(new Identifier("multiplex:test"));
+        CookieRegistry.registerCookie(new Identifier("multiplex:test"), "yoooooopoggers");
     }
 
     private static int transfer(CommandContext<ServerCommandSource> context, String address, int port) {
