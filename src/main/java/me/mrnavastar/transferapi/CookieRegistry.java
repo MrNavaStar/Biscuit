@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,8 +53,8 @@ public class CookieRegistry implements ModInitializer {
         if (secret == null) return null;
 
         try {
-            return CookieUtils.signCookie(cookie, secret, "HmacSHA256");
-        } catch (NoSuchAlgorithmException | InvalidKeyException ignore) {
+            return CookieUtils.signCookie(cookie, secret, CookieUtils.DEFAULT_MAC);
+        } catch (InvalidKeyException ignore) {
             return null;
         }
     }
@@ -65,8 +64,8 @@ public class CookieRegistry implements ModInitializer {
         if (secret == null) return null;
 
         try {
-            return CookieUtils.verifyCookie(cookie, secret, "HmacSHA256");
-        } catch (NoSuchAlgorithmException | InvalidKeyException ignore) {
+            return CookieUtils.verifyCookie(cookie, secret, CookieUtils.DEFAULT_MAC);
+        } catch (InvalidKeyException ignore) {
             return null;
         }
     }

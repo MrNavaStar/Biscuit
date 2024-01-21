@@ -9,45 +9,52 @@ import java.util.Arrays;
 
 public class CookieUtils {
 
-    private static byte[] computeSignature(byte[] cookie, byte[] secret, String algorithm) throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac mac = Mac.getInstance(algorithm);
-        mac.init(new SecretKeySpec(secret, algorithm));
+    public static final Mac DEFAULT_MAC;
+
+    static {
+        try {
+            DEFAULT_MAC = Mac.getInstance("HmacSHA256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static byte[] computeSignature(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
+        mac.init(new SecretKeySpec(secret, mac.getAlgorithm()));
         return mac.doFinal(cookie);
     }
 
     // Returns original cookie if secret has a length of zero
     // Returns null if cookie too big fit.
     // Returns the signed cookie if all is well
-    public static byte[] signCookie(byte[] cookie, byte[] secret, String algorithm) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static byte[] signCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
         if (cookie == null || secret == null) return null;
-        int len = cookie.length + 32;
+        int len = cookie.length + mac.getMacLength();
         if (len > 5120) return null; // Cookie is longer than the max size the client accepts
         if (secret.length == 0) return cookie;
 
-        //System.out.println("Cookie: " + Arrays.toString(cookie));
-
         ByteBuffer buffer = ByteBuffer.wrap(new byte[len]);
-        buffer.put(computeSignature(cookie, secret, algorithm));
+        buffer.put(computeSignature(cookie, secret, mac));
         buffer.put(cookie);
-
-       // System.out.println("Signed: " + Arrays.toString(buffer.array()));
 
         return buffer.array();
     }
 
     // Returns original cookie if secret has a length of zero
     // Returns null if cookie is invalid, otherwise returns cookie data (without the secret attached).
-    public static byte[] verifyCookie(byte[] cookie, byte[] secret, String algorithm) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static byte[] verifyCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
         if (cookie == null || secret == null) return null;
         if (secret.length == 0) return cookie;
 
         ByteBuffer buffer = ByteBuffer.wrap(cookie);
-        byte[] signature = new byte[32];
-        byte[] data = new byte[cookie.length - 32];
-        buffer.get(0, signature, 0, 32);
-        buffer.get(32, data, 0, data.length);
+        int macLen = mac.getMacLength();
 
-        if (Arrays.equals(signature, computeSignature(data, secret, algorithm))) return data;
+        byte[] signature = new byte[macLen];
+        byte[] data = new byte[cookie.length - macLen];
+        buffer.get(0, signature, 0, macLen);
+        buffer.get(macLen, data, 0, data.length);
+
+        if (Arrays.equals(signature, computeSignature(data, secret, mac))) return data;
         return null;
     }
 }

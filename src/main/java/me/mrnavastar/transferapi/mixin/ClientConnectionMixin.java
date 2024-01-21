@@ -1,14 +1,12 @@
 package me.mrnavastar.transferapi.mixin;
 
 import me.mrnavastar.transferapi.CookieRegistry;
-import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.api.ServerTransferable;
 import me.mrnavastar.transferapi.interfaces.TransferMeta;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.common.ServerTransferS2CPacket;
 import net.minecraft.network.packet.s2c.common.StoreCookieS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
