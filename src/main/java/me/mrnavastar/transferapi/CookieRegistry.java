@@ -1,11 +1,12 @@
 package me.mrnavastar.transferapi;
 
-import lombok.Getter;
 import me.mrnavastar.transferapi.commands.DebugCommands;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 
+import javax.crypto.Mac;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
@@ -13,34 +14,48 @@ import java.util.List;
 
 public class CookieRegistry implements ModInitializer {
 
-    @Getter
-    private static boolean transferOnly = false;
-    // Map of cooke ids and cookie signing secrets
-    private static final HashMap<Identifier, byte[]> registeredCookies = new HashMap<>();
+    // Map of cooke ids, signing secrets, and hashing macs
+    private static final HashMap<Identifier, Pair<byte[], Mac>> registeredCookies = new HashMap<>();
+
+    public static class CookieRegistrar {
+        private final Identifier cookieId;
+        private byte[] secret = new byte[]{};
+        private Mac mac = CookieUtils.DEFAULT_MAC;
+
+        public CookieRegistrar(Identifier cookieId) {
+            this.cookieId = cookieId;
+        }
+
+        public CookieRegistrar setSecret(byte[] secret) {
+            this.secret = secret;
+            return this;
+        }
+
+        public CookieRegistrar setSecret(String secret) {
+            this.secret = secret.getBytes(StandardCharsets.UTF_8);
+            return this;
+        }
+
+        public CookieRegistrar setCustomMac(Mac mac) {
+            this.mac = mac;
+            return this;
+        }
+
+        public void finish() {
+            registeredCookies.put(cookieId, new Pair<>(secret, mac));
+        }
+    }
 
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> DebugCommands.init(server.getCommandManager().getDispatcher()));
-
-        //
-        /*ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
-            if (transferOnly && handler.wasTransferred()) handler.disconnect(Text.of("This server is transfer only!"));
-        });*/
     }
 
-    public static void registerCookie(Identifier cookieId, byte[] secret) {
-        registeredCookies.put(cookieId, secret);
+    public static CookieRegistrar register(Identifier cookieId) {
+        return new CookieRegistrar(cookieId);
     }
 
-    public static void registerCookie(Identifier cookieId) {
-        registerCookie(cookieId, new byte[]{});
-    }
-
-    public static void registerCookie(Identifier cookieId, String secret) {
-        registerCookie(cookieId, secret.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static void unregisterCookie(Identifier cookieId) {
+    public static void unregister(Identifier cookieId) {
         registeredCookies.remove(cookieId);
     }
 
@@ -49,22 +64,22 @@ public class CookieRegistry implements ModInitializer {
     }
 
     public static byte[] signCookie(Identifier cookieId, byte[] cookie) {
-        byte[] secret = registeredCookies.get(cookieId);
-        if (secret == null) return null;
+        Pair<byte[], Mac> signingData = registeredCookies.get(cookieId);
+        if (signingData == null) return null;
 
         try {
-            return CookieUtils.signCookie(cookie, secret, CookieUtils.DEFAULT_MAC);
+            return CookieUtils.signCookie(cookie, signingData.getLeft(), signingData.getRight());
         } catch (InvalidKeyException ignore) {
             return null;
         }
     }
 
     public static byte[] verifyCookie(Identifier cookieId, byte[] cookie) {
-        byte[] secret = registeredCookies.get(cookieId);
-        if (secret == null) return null;
+        Pair<byte[], Mac> signingData = registeredCookies.get(cookieId);
+        if (signingData == null) return null;
 
         try {
-            return CookieUtils.verifyCookie(cookie, secret, CookieUtils.DEFAULT_MAC);
+            return CookieUtils.verifyCookie(cookie, signingData.getLeft(), signingData.getRight());
         } catch (InvalidKeyException ignore) {
             return null;
         }

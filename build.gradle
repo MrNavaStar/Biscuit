@@ -33,9 +33,6 @@ dependencies {
     include(modImplementation(files("fabric-api-base-0.4.36+78d798af4f.jar")))
     include(modImplementation(files("fabric-lifecycle-events-v1-2.2.30+46229b6b4f.jar")))
     //modImplementation(files("fabric-networking-api-v1-3.1.5+b7e146354f.jar"))
-
-    // Extra
-    compileOnly "org.projectlombok:lombok:1.18.28"
 }
 
 processResources {
