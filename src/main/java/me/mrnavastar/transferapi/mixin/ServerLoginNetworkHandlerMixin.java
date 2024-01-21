@@ -52,6 +52,8 @@ public class ServerLoginNetworkHandlerMixin implements ServerTransferable {
 
     @Inject(method = "onCookieResponse", at = @At("HEAD"))
     private void storeCookie(CookieResponseC2SPacket packet, CallbackInfo ci) {
+        if (((TransferMeta) connection).fabric_getRequestedCookies().remove(packet.key())) return;
+
         byte[] cookie = CookieRegistry.verifyCookie(packet.key(), packet.payload());
         if (cookie == null) return; // TODO: Fire an event maybe???
 

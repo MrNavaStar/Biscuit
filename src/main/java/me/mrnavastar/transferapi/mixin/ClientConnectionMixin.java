@@ -13,17 +13,24 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 @Mixin(ClientConnection.class)
 public abstract class ClientConnectionMixin implements TransferMeta, ServerTransferable {
 
     @Shadow public abstract void send(Packet<?> packet);
     @Unique private final HashMap<Identifier, byte[]> cookies = new HashMap<>();
+    @Unique private final HashSet<Identifier> requestedCookies = new HashSet<>();
     @Unique private boolean wasTransferred = false;
 
     @Override
     public HashMap<Identifier, byte[]> fabric_getCookieStore() {
         return cookies;
+    }
+
+    @Override
+    public HashSet<Identifier> fabric_getRequestedCookies() {
+        return requestedCookies;
     }
 
     @Override
@@ -54,6 +61,7 @@ public abstract class ClientConnectionMixin implements TransferMeta, ServerTrans
 
     @Override
     public byte[] getCookie(Identifier cookieId) {
+        requestedCookies.add(cookieId);
         return cookies.getOrDefault(cookieId, new byte[]{});
     }
 }
