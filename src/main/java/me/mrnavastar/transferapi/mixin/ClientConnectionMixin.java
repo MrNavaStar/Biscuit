@@ -1,6 +1,7 @@
 package me.mrnavastar.transferapi.mixin;
 
 import me.mrnavastar.transferapi.CookieRegistry;
+import me.mrnavastar.transferapi.api.ServerCookieStore;
 import me.mrnavastar.transferapi.api.ServerTransferable;
 import me.mrnavastar.transferapi.interfaces.TransferMeta;
 import net.minecraft.network.ClientConnection;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 @Mixin(ClientConnection.class)
-public abstract class ClientConnectionMixin implements TransferMeta, ServerTransferable {
+public abstract class ClientConnectionMixin implements TransferMeta, ServerTransferable, ServerCookieStore {
 
     @Shadow public abstract void send(Packet<?> packet);
     @Unique private final HashMap<Identifier, byte[]> cookies = new HashMap<>();

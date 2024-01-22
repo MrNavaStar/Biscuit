@@ -21,10 +21,10 @@
   ],
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_2535": ["me/mrnavastar/transferapi/api/ServerTransferable"],
-      "net/minecraft/class_3222": ["me/mrnavastar/transferapi/api/ServerTransferable"],
+      "net/minecraft/class_2535": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"],
+      "net/minecraft/class_3222": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"],
       "net/minecraft/class_3248": ["me/mrnavastar/transferapi/api/ServerTransferable"],
-      "net/minecraft/class_8609": ["me/mrnavastar/transferapi/api/ServerTransferable"]
+      "net/minecraft/class_8609": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"]
     }
   },
   "depends": {

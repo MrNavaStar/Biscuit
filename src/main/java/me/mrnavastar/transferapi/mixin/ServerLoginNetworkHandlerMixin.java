@@ -2,8 +2,8 @@ package me.mrnavastar.transferapi.mixin;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
-import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.CookieRegistry;
+import me.mrnavastar.transferapi.ServerTransferEvents;
 import me.mrnavastar.transferapi.api.ServerTransferable;
 import me.mrnavastar.transferapi.interfaces.TransferMeta;
 import net.minecraft.network.ClientConnection;
@@ -11,7 +11,6 @@ import net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket;
 import net.minecraft.network.packet.s2c.common.CookieRequestS2CPacket;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,16 +32,6 @@ public class ServerLoginNetworkHandlerMixin implements ServerTransferable {
     @Override
     public boolean wasTransferred() {
         return ((ServerTransferable) connection).wasTransferred();
-    }
-
-    @Override
-    public void setCookie(Identifier cookieId, byte[] cookie) {
-        ((ServerTransferable) connection).setCookie(cookieId, cookie);
-    }
-
-    @Override
-    public byte[] getCookie(Identifier cookieId) {
-        return ((ServerTransferable) connection).getCookie(cookieId);
     }
 
     @Inject(method = "sendSuccessPacket", at = @At("HEAD"))

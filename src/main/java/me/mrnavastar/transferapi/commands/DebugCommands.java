@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import me.mrnavastar.transferapi.CookieRegistry;
 import me.mrnavastar.transferapi.CookieUtils;
+import me.mrnavastar.transferapi.api.ServerCookieStore;
 import me.mrnavastar.transferapi.api.ServerTransferable;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -42,13 +43,13 @@ public class DebugCommands {
 
     private static int setCookieData(CommandContext<ServerCommandSource> context, String data) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        ((ServerTransferable) player).setCookie(new Identifier("multiplex:test"), data.getBytes());
+        ((ServerCookieStore) player).setCookie(new Identifier("multiplex:test"), data.getBytes());
         return 0;
     }
 
     private static int getCookieData(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        player.sendMessage(Text.of(new String(((ServerTransferable) player).getCookie(new Identifier("multiplex:test")))));
+        player.sendMessage(Text.of(new String(((ServerCookieStore) player).getCookie(new Identifier("multiplex:test")))));
         return 0;
     }
 }

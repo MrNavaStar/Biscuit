@@ -1,7 +1,5 @@
 package me.mrnavastar.transferapi.api;
 
-import net.minecraft.util.Identifier;
-
 import java.net.InetSocketAddress;
 import java.net.URL;
 
@@ -18,8 +16,4 @@ public interface ServerTransferable {
     }
 
     boolean wasTransferred();
-
-    void setCookie(Identifier cookieId, byte[] cookie);
-
-    byte[] getCookie(Identifier cookieId);
 }
