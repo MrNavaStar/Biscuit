@@ -71,6 +71,8 @@ public class CookieRegistry implements ModInitializer {
             return CookieUtils.signCookie(cookie, signingData.getLeft(), signingData.getRight());
         } catch (InvalidKeyException ignore) {
             return null;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -80,7 +82,7 @@ public class CookieRegistry implements ModInitializer {
 
         try {
             return CookieUtils.verifyCookie(cookie, signingData.getLeft(), signingData.getRight());
-        } catch (InvalidKeyException ignore) {
+        } catch (InvalidKeyException | CloneNotSupportedException ignore) {
             return null;
         }
     }

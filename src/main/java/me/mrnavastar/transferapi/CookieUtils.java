@@ -18,15 +18,16 @@ public class CookieUtils {
         }
     }
 
-    private static byte[] computeSignature(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
-        mac.init(new SecretKeySpec(secret, mac.getAlgorithm()));
-        return mac.doFinal(cookie);
+    private static byte[] computeSignature(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException, CloneNotSupportedException {
+        Mac localMac = (Mac) mac.clone();
+        localMac.init(new SecretKeySpec(secret, localMac.getAlgorithm()));
+        return localMac.doFinal(cookie);
     }
 
     // Returns original cookie if secret has a length of zero
     // Returns null if cookie too big fit.
     // Returns the signed cookie if all is well
-    public static byte[] signCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
+    public static byte[] signCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException, CloneNotSupportedException {
         if (cookie == null || secret == null) return null;
 
         int macLen = mac.getMacLength();
@@ -42,7 +43,7 @@ public class CookieUtils {
 
     // Returns original cookie if secret has a length of zero
     // Returns null if cookie is invalid, otherwise returns cookie data (without the secret attached).
-    public static byte[] verifyCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException {
+    public static byte[] verifyCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException, CloneNotSupportedException {
         if (cookie == null || secret == null) return null;
         if (secret.length == 0) return cookie;
 
