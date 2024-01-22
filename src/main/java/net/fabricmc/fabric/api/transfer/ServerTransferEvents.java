@@ -1,4 +1,4 @@
-package me.mrnavastar.transferapi;
+package net.fabricmc.fabric.api.transfer;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.Event;

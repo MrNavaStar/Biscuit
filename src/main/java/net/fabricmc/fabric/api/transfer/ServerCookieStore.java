@@ -1,4 +1,4 @@
-package me.mrnavastar.transferapi.api;
+package net.fabricmc.fabric.api.transfer;
 
 import net.minecraft.util.Identifier;
 

@@ -1,9 +1,9 @@
-package me.mrnavastar.transferapi.mixin;
+package net.fabricmc.fabric.mixin.transfer;
 
-import me.mrnavastar.transferapi.CookieUtils;
-import me.mrnavastar.transferapi.api.ServerCookieStore;
-import me.mrnavastar.transferapi.api.ServerTransferable;
-import me.mrnavastar.transferapi.interfaces.ClientConnectionMeta;
+import net.fabricmc.fabric.impl.transfer.CookieSigner;
+import net.fabricmc.fabric.api.transfer.ServerCookieStore;
+import net.fabricmc.fabric.api.transfer.ServerTransferable;
+import net.fabricmc.fabric.impl.transfer.ClientConnectionMeta;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.common.ServerTransferS2CPacket;
@@ -72,7 +72,7 @@ public abstract class ClientConnectionMixin implements ClientConnectionMeta, Ser
             Pair<byte[], Mac> signingData = registeredCookies.get(cookieId);
             if (signingData == null) return;
 
-            byte[] signedCookie = CookieUtils.signCookie(cookie, signingData.getLeft(), signingData.getRight());
+            byte[] signedCookie = CookieSigner.signCookie(cookie, signingData.getLeft(), signingData.getRight());
             if (signedCookie == null) return;
 
             send(new StoreCookieS2CPacket(cookieId, signedCookie));

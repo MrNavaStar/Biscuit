@@ -1,6 +1,6 @@
-package me.mrnavastar.transferapi.mixin;
+package net.fabricmc.fabric.mixin.transfer;
 
-import me.mrnavastar.transferapi.interfaces.ClientConnectionMeta;
+import net.fabricmc.fabric.impl.transfer.ClientConnectionMeta;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.server.network.ServerHandshakeNetworkHandler;

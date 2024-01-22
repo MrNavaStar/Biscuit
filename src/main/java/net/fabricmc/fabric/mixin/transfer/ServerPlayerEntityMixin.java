@@ -1,7 +1,7 @@
-package me.mrnavastar.transferapi.mixin;
+package net.fabricmc.fabric.mixin.transfer;
 
-import me.mrnavastar.transferapi.api.ServerCookieStore;
-import me.mrnavastar.transferapi.api.ServerTransferable;
+import net.fabricmc.fabric.api.transfer.ServerCookieStore;
+import net.fabricmc.fabric.api.transfer.ServerTransferable;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;

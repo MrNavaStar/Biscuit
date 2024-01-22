@@ -1,4 +1,4 @@
-package me.mrnavastar.transferapi.api;
+package net.fabricmc.fabric.api.transfer;
 
 import java.net.InetSocketAddress;
 import java.net.URL;

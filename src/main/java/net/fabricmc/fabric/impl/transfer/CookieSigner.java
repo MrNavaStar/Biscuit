@@ -1,4 +1,4 @@
-package me.mrnavastar.transferapi;
+package net.fabricmc.fabric.impl.transfer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -6,7 +6,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class CookieUtils {
+public class CookieSigner {
 
     public static final Mac DEFAULT_MAC;
 

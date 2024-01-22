@@ -4,10 +4,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import me.mrnavastar.transferapi.CookieRegistry;
-import me.mrnavastar.transferapi.CookieUtils;
-import me.mrnavastar.transferapi.api.ServerCookieStore;
-import me.mrnavastar.transferapi.api.ServerTransferable;
+import net.fabricmc.fabric.api.transfer.CookieRegistry;
+import net.fabricmc.fabric.impl.transfer.CookieSigner;
+import net.fabricmc.fabric.api.transfer.ServerCookieStore;
+import net.fabricmc.fabric.api.transfer.ServerTransferable;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -32,7 +32,7 @@ public class DebugCommands {
                         .executes(DebugCommands::getCookieData)
         );
 
-        CookieRegistry.register(new Identifier("multiplex:test")).setSecret("poggers dawg").setCustomMac(CookieUtils.DEFAULT_MAC).finish();
+        CookieRegistry.register(new Identifier("multiplex:test")).setSecret("poggers dawg").setCustomMac(CookieSigner.DEFAULT_MAC).finish();
     }
 
     private static int transfer(CommandContext<ServerCommandSource> context, String address, int port) {

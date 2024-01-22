@@ -1,7 +1,8 @@
-package me.mrnavastar.transferapi;
+package net.fabricmc.fabric.api.transfer;
 
+import net.fabricmc.fabric.impl.transfer.CookieSigner;
 import me.mrnavastar.transferapi.commands.DebugCommands;
-import me.mrnavastar.transferapi.interfaces.ClientConnectionMeta;
+import net.fabricmc.fabric.impl.transfer.ClientConnectionMeta;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.network.ClientConnection;
@@ -27,7 +28,7 @@ public class CookieRegistry implements ModInitializer {
     public static class CookieRegistrar {
         private final Identifier cookieId;
         private byte[] secret = new byte[]{};
-        private Mac mac = CookieUtils.DEFAULT_MAC;
+        private Mac mac = CookieSigner.DEFAULT_MAC;
 
         public CookieRegistrar(Identifier cookieId) {
             this.cookieId = cookieId;
