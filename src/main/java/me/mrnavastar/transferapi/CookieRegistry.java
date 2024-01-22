@@ -1,14 +1,15 @@
 package me.mrnavastar.transferapi;
 
 import me.mrnavastar.transferapi.commands.DebugCommands;
+import me.mrnavastar.transferapi.interfaces.ClientConnectionMeta;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
 import javax.crypto.Mac;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +17,12 @@ public class CookieRegistry implements ModInitializer {
 
     // Map of cooke ids, signing secrets, and hashing macs
     private static final HashMap<Identifier, Pair<byte[], Mac>> registeredCookies = new HashMap<>();
+
+    public CookieRegistry() {}
+
+    public CookieRegistry(ClientConnection connection) {
+        ((ClientConnectionMeta) connection).fabric_setCookieRegistry(registeredCookies);
+    }
 
     public static class CookieRegistrar {
         private final Identifier cookieId;
@@ -32,8 +39,7 @@ public class CookieRegistry implements ModInitializer {
         }
 
         public CookieRegistrar setSecret(String secret) {
-            this.secret = secret.getBytes(StandardCharsets.UTF_8);
-            return this;
+            return setSecret(secret.getBytes(StandardCharsets.UTF_8));
         }
 
         public CookieRegistrar setCustomMac(Mac mac) {
@@ -61,29 +67,5 @@ public class CookieRegistry implements ModInitializer {
 
     public static List<Identifier> getRegisteredCookies() {
         return registeredCookies.keySet().stream().toList();
-    }
-
-    public static byte[] signCookie(Identifier cookieId, byte[] cookie) {
-        Pair<byte[], Mac> signingData = registeredCookies.get(cookieId);
-        if (signingData == null) return null;
-
-        try {
-            return CookieUtils.signCookie(cookie, signingData.getLeft(), signingData.getRight());
-        } catch (InvalidKeyException ignore) {
-            return null;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static byte[] verifyCookie(Identifier cookieId, byte[] cookie) {
-        Pair<byte[], Mac> signingData = registeredCookies.get(cookieId);
-        if (signingData == null) return null;
-
-        try {
-            return CookieUtils.verifyCookie(cookie, signingData.getLeft(), signingData.getRight());
-        } catch (InvalidKeyException | CloneNotSupportedException ignore) {
-            return null;
-        }
     }
 }

@@ -1,11 +1,17 @@
 package me.mrnavastar.transferapi.interfaces;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
+
+import javax.crypto.Mac;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface TransferMeta {
+public interface ClientConnectionMeta {
+
+    void fabric_setCookieRegistry(HashMap<Identifier, Pair<byte[], Mac>> registeredCookies);
+
+    HashMap<Identifier, Pair<byte[], Mac>> fabric_getCookieRegistry();
 
     HashMap<Identifier, byte[]> fabric_getCookieStore();
 
