@@ -1,4 +1,4 @@
-package net.fabricmc.fabric.impl.transfer;
+package me.mrnavastar.cookiejar;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

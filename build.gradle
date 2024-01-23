@@ -1,6 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.5-SNAPSHOT'
-    id 'maven-publish'
 }
 
 version = project.mod_version
@@ -30,9 +29,13 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    include(modImplementation(files("fabric-api-base-0.4.36+78d798af4f.jar")))
-    include(modImplementation(files("fabric-lifecycle-events-v1-2.2.30+46229b6b4f.jar")))
-    //modImplementation(files("fabric-networking-api-v1-3.1.5+b7e146354f.jar"))
+    include(modImplementation(files("fabric-api-base-0.4.38+80f8cf5191.jar")))
+    include(modImplementation(files("fabric-command-api-v2-2.2.22+80f8cf5191.jar")))
+    include(modImplementation(files("fabric-lifecycle-events-v1-2.2.32+80f8cf5191.jar")))
+    include(modImplementation(files("fabric-networking-api-v1-4.0.0+767891ba91.jar")))
+
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 }
 
 processResources {
@@ -75,22 +78,5 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }

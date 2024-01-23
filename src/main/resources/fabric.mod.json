@@ -1,33 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "transferapi",
+  "id": "cookiejar",
   "version": "${version}",
-  "name": "TransferAPI",
+  "name": "CookieJar",
   "description": "",
-  "authors": [],
+  "authors": ["MrNavaStar"],
   "contact": {
-    "repo": "https://github.com/ethan/TransferAPI"
+    "repo": ""
   },
-  "license": "All-Rights-Reserved",
+  "license": "CC0-1.0",
   "icon": "assets/transferapi/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.fabric.api.transfer.CookieRegistry"
-    ]
+    "server": ["me.mrnavastar.cookiejar.api.CookieJar"]
   },
   "mixins": [
     "transferapi.mixins.json"
   ],
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_2535": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"],
-      "net/minecraft/class_3222": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"],
-      "net/minecraft/class_3248": ["me/mrnavastar/transferapi/api/ServerTransferable"],
-      "net/minecraft/class_8609": ["me/mrnavastar/transferapi/api/ServerTransferable", "me/mrnavastar/transferapi/api/ServerCookieStore"]
+      "net/minecraft/class_2535": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
+      "net/minecraft/class_3222": [ "net/fabricmc/fabric/api/networking/v1/ServerTransferable", "net/fabricmc/fabric/api/networking/v1/ServerCookieStore", "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
+      "net/minecraft/class_3248": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
+      "net/minecraft/class_8609": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ]
     }
   },
   "depends": {
-
   }
 }
