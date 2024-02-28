@@ -1,6 +1,5 @@
 package me.mrnavastar.cookiejar.mixin;
 
-import me.mrnavastar.cookiejar.api.Cookie;
 import me.mrnavastar.cookiejar.api.ServerCookieJar;
 import net.fabricmc.fabric.api.networking.v1.ServerCookieStore;
 import net.fabricmc.fabric.api.networking.v1.ServerTransferable;
@@ -40,12 +39,12 @@ public class ServerPlayerEntityMixin implements ServerTransferable, ServerCookie
     }
 
     @Override
-    public void setCookie(Cookie cookie) {
+    public void setCookie(Object cookie) {
         ((ServerCookieJar) networkHandler).setCookie(cookie);
     }
 
     @Override
-    public <T extends Cookie> CompletableFuture<T> getCookie(Class<T> cookieType) {
+    public <T> CompletableFuture<T> getCookie(Class<T> cookieType) {
         return ((ServerCookieJar) networkHandler).getCookie(cookieType);
     }
 }

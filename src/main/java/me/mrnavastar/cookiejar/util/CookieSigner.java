@@ -1,4 +1,4 @@
-package me.mrnavastar.cookiejar;
+package me.mrnavastar.cookiejar.util;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

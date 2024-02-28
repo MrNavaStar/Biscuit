@@ -1,34 +1,43 @@
 package me.mrnavastar.cookiejar.api;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import me.mrnavastar.cookiejar.CookieSigner;
+import com.esotericsoftware.kryo.kryo5.Kryo;
+import com.esotericsoftware.kryo.kryo5.io.Input;
+import com.esotericsoftware.kryo.kryo5.io.Output;
 import me.mrnavastar.cookiejar.DebugCommands;
+import me.mrnavastar.cookiejar.util.CookieSigner;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerCookieStore;
 import net.minecraft.util.Identifier;
 
 import javax.crypto.Mac;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CookieJar implements DedicatedServerModInitializer {
 
     // Map of cooke ids, signing secrets, and hashing macs
-    private static final ConcurrentHashMap<Class<? extends Cookie>, RegisteredCookie> registeredCookies = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, RegisteredCookie> registeredCookies = new ConcurrentHashMap<>();
+    private static final Kryo kryo = new Kryo();
+
+    static {
+        kryo.setRegistrationRequired(false);
+    }
 
     private record RegisteredCookie(Identifier identifier, byte[] secret, Mac mac) {}
 
     public static class CookieRegistrar {
-        private final Identifier cookieId;
-        private final Class<? extends Cookie> cookieType;
+        private final Class<?> cookieType;
         private byte[] secret = new byte[]{};
         private Mac mac = CookieSigner.DEFAULT_MAC;
 
-        public CookieRegistrar(Identifier cookieId, Class<? extends Cookie> cookieType) {
-            this.cookieId = cookieId;
+        public CookieRegistrar(Class<?> cookieType) {
             this.cookieType = cookieType;
         }
 
@@ -47,42 +56,37 @@ public class CookieJar implements DedicatedServerModInitializer {
         }
 
         public void finish() {
-            registeredCookies.put(cookieType, new RegisteredCookie(cookieId, secret, mac));
+            Identifier id = new Identifier("cookiejar", UUID.nameUUIDFromBytes(cookieType.getName().getBytes(StandardCharsets.UTF_8)).toString());
+            registeredCookies.put(cookieType, new RegisteredCookie(id, secret, mac));
         }
     }
 
     @Override
     public void onInitializeServer() {
         CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> DebugCommands.init(dispatcher));
-
-        /*ServerLoginConnectionEvents.INIT.register((serverLoginNetworkHandler, minecraftServer) -> {
-            serverLoginNetworkHandler.wasTransferred();
-        });*/
     }
 
-    public static CookieRegistrar register(Identifier cookieId, Class<? extends Cookie> cookieType) {
-        return new CookieRegistrar(cookieId, cookieType);
+    public static CookieRegistrar register(Class<?> cookieType) {
+        return new CookieRegistrar(cookieType);
     }
 
-    public static void unregister(Class<? extends Cookie> cookieType) {
+    public static void unregister(Class<?> cookieType) {
         registeredCookies.remove(cookieType);
     }
 
-    public static void setCookie(ServerCookieStore cookieStore, Cookie cookie) {
-        try {
-            RegisteredCookie registeredCookie = registeredCookies.get(cookie.getClass());
-            if (registeredCookie == null) return;
+    public static void setCookie(ServerCookieStore cookieStore, Object cookie) {
+        RegisteredCookie registeredCookie = registeredCookies.get(cookie.getClass());
+        if (registeredCookie == null) return;
 
-            ByteBuf buf = Unpooled.buffer(0, 5120);
-            cookie.encode(buf);
-            cookieStore.setCookie(registeredCookie.identifier, CookieSigner.signCookie(buf.array(), registeredCookie.secret, registeredCookie.mac));
-        } catch (Exception e) {
-            e.printStackTrace();
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(5120)) {
+            kryo.writeObject(new Output(out), cookie);
+            cookieStore.setCookie(registeredCookie.identifier, CookieSigner.signCookie(out.toByteArray(), registeredCookie.secret, registeredCookie.mac));
+        } catch (IOException | InvalidKeyException | CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static <T extends Cookie> CompletableFuture<T> getCookie(ServerCookieStore cookieStore, Class<T> cookieType) {
+    public static <T> CompletableFuture<T> getCookie(ServerCookieStore cookieStore, Class<T> cookieType) {
         RegisteredCookie registeredCookie = registeredCookies.get(cookieType);
         if (registeredCookie == null) return null;
 
@@ -95,13 +99,11 @@ public class CookieJar implements DedicatedServerModInitializer {
                     return;
                 }
 
-                ByteBuf buf = Unpooled.wrappedBuffer(validData);
-                Cookie cookieInstance = cookieType.getDeclaredConstructor().newInstance();
-                cookieInstance.decode(buf);
-                future.complete(cookieType.cast(cookieInstance));
+                try (ByteArrayInputStream in = new ByteArrayInputStream(validData)) {
+                    future.complete(kryo.readObject(new Input(in), cookieType));
+                }
             } catch (Exception e) {
                 future.cancel(true);
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });

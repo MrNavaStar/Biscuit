@@ -4,38 +4,24 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import io.netty.buffer.ByteBuf;
 import lombok.NoArgsConstructor;
-import me.mrnavastar.cookiejar.api.Cookie;
 import me.mrnavastar.cookiejar.api.CookieJar;
 import me.mrnavastar.cookiejar.api.ServerCookieJar;
-import me.mrnavastar.cookiejar.util.BufUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerTransferable;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public class DebugCommands {
 
     @NoArgsConstructor
-    public static class TestCookie implements Cookie {
+    public static class TestCookie {
 
         private String data;
 
         public TestCookie(String data) {
             this.data = data;
-        }
-
-        @Override
-        public void encode(ByteBuf buf) throws Exception {
-            BufUtils.writeString(buf, data);
-        }
-
-        @Override
-        public void decode(ByteBuf buf) throws Exception {
-            data = BufUtils.readString(buf);
         }
     }
 
@@ -55,7 +41,7 @@ public class DebugCommands {
                         .executes(DebugCommands::getCookieData)
         );
 
-        CookieJar.register(new Identifier("cookiejar:test"), TestCookie.class).setSecret("very epic").finish();
+        CookieJar.register(TestCookie.class).setSecret("very epic").finish();
     }
 
     private static int transfer(CommandContext<ServerCommandSource> context, String address, int port) {
