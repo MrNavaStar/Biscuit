@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "cookiejar",
+  "id": "biscuit",
   "version": "${version}",
-  "name": "CookieJar",
+  "name": "Biscuit",
   "description": "",
   "authors": ["MrNavaStar"],
   "contact": {
@@ -12,17 +12,19 @@
   "icon": "assets/transferapi/icon.png",
   "environment": "*",
   "entrypoints": {
-    "server": ["me.mrnavastar.cookiejar.api.CookieJar"]
+    "server": [
+      "me.mrnavastar.biscuit.api.Biscuit"
+    ]
   },
   "mixins": [
     "transferapi.mixins.json"
   ],
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_2535": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
-      "net/minecraft/class_3222": [ "net/fabricmc/fabric/api/networking/v1/ServerTransferable", "net/fabricmc/fabric/api/networking/v1/ServerCookieStore", "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
-      "net/minecraft/class_3248": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ],
-      "net/minecraft/class_8609": [ "me/mrnavastar/cookiejar/api/ServerCookieJar" ]
+      "net/minecraft/class_2535": [ "me/mrnavastar/biscuit/api/CookieJar" ],
+      "net/minecraft/class_3222": [ "me/mrnavastar/biscuit/api/CookieJar" ],
+      "net/minecraft/class_3248": [ "me/mrnavastar/biscuit/api/CookieJar" ],
+      "net/minecraft/class_8609": [ "me/mrnavastar/biscuit/api/CookieJar" ]
     }
   },
   "depends": {
