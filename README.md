@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:biscuit:1.0.0")
+  modImplementation("maven.modrinth:biscuit!:1.0.0")
 }
 ```
 
