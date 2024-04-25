@@ -1,3 +1,12 @@
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+[![name](https://github.com/modrinth/art/blob/main/Branding/Badge/badge-dark__184x72.png?raw=true)](https://modrinth.com/mod/biscuit!)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G4DZF4D)
+
+<img src="https://raw.githubusercontent.com/MrNavaStar/Biscuit/master/src/main/resources/assets/biscuit/icon.png" width="300" height="300">
+
 # Biscuit!
 
 A simple API for working with 1.20.5 cookies in an easy and secure way!
