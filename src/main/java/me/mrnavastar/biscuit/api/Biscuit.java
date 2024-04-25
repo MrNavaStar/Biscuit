@@ -5,11 +5,8 @@ import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
 import com.esotericsoftware.kryo.kryo5.objenesis.strategy.StdInstantiatorStrategy;
 import com.esotericsoftware.kryo.kryo5.util.DefaultInstantiatorStrategy;
-import me.mrnavastar.biscuit.DebugCommands;
 import me.mrnavastar.biscuit.InternalStuff;
 import me.mrnavastar.biscuit.util.CookieSigner;
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.network.packet.s2c.common.StoreCookieS2CPacket;
 import net.minecraft.util.Identifier;
 
@@ -20,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Biscuit implements DedicatedServerModInitializer {
+public class Biscuit {
 
     // Map of cooke ids, signing secrets, and hashing macs
     private static final Map<Class<?>, RegisteredCookie> registeredCookies = new ConcurrentHashMap<>();
@@ -61,11 +58,6 @@ public class Biscuit implements DedicatedServerModInitializer {
         public void finish() {
             registeredCookies.put(cookieType, new RegisteredCookie(id, secret, mac));
         }
-    }
-
-    @Override
-    public void onInitializeServer() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> DebugCommands.init(dispatcher));
     }
 
     public static CookieRegistrar register(Identifier identifier, Class<?> cookieType) {
