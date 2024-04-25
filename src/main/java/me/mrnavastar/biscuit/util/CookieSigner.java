@@ -25,14 +25,14 @@ public class CookieSigner {
     }
 
     // Returns original cookie if secret has a length of zero
-    // Returns empty if cookie too big fit.
+    // Returns null if cookie too big fit.
     // Returns the signed cookie if all is well
     public static byte[] signCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException, CloneNotSupportedException {
-        if (cookie == null || secret == null) return new byte[0];
+        if (cookie == null || secret == null) return null;
 
         int macLen = mac.getMacLength();
         int len = cookie.length + macLen;
-        if (len > 5120) return new byte[0]; // Cookie is longer than the max size the client accepts
+        if (len > 5120) return null; // Cookie is longer than the max size the client accepts
         if (secret.length == 0) return cookie;
 
         byte[] data = new byte[len];
@@ -42,9 +42,9 @@ public class CookieSigner {
     }
 
     // Returns original cookie if secret has a length of zero
-    // Returns empty if cookie is invalid, otherwise returns cookie data (without the secret attached).
+    // Returns null if cookie is invalid, otherwise returns cookie data (without the secret attached).
     public static byte[] verifyCookie(byte[] cookie, byte[] secret, Mac mac) throws InvalidKeyException, CloneNotSupportedException {
-        if (cookie == null || secret == null) return new byte[0];
+        if (cookie == null || secret == null) return null;
         if (secret.length == 0) return cookie;
 
         int macLen = mac.getMacLength();
@@ -54,6 +54,6 @@ public class CookieSigner {
         System.arraycopy(cookie, macLen, data, 0, data.length);
 
         if (Arrays.equals(signature, computeSignature(data, secret, mac))) return data;
-        return new byte[0];
+        return null;
     }
 }

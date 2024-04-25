@@ -5,11 +5,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import lombok.NoArgsConstructor;
 import me.mrnavastar.biscuit.api.Biscuit;
-import me.mrnavastar.biscuit.api.CookieJar;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class DebugCommands {
 
@@ -20,6 +20,11 @@ public class DebugCommands {
 
         public TestCookie(String data) {
             this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return data;
         }
     }
 
@@ -34,12 +39,12 @@ public class DebugCommands {
                         .executes(DebugCommands::getCookieData)
         );
 
-        Biscuit.register(TestCookie.class).finish();
+        Biscuit.register(new Identifier("test", "cookie"), TestCookie.class).setSecret("ASDKJAKLJFKLSD").finish();
     }
 
     private static int setCookieData(CommandContext<ServerCommandSource> context, String data) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        ((CookieJar) player).setCookie(new TestCookie(data));
+        player.setCookie(new TestCookie(data));
         return 0;
     }
 
@@ -48,9 +53,6 @@ public class DebugCommands {
         if (player == null) return 0;
 
         player.getCookie(TestCookie.class).whenComplete((data, throwable) -> {
-
-            System.out.println(data.data);
-
            player.sendMessage(Text.of(data.data));
         });
 

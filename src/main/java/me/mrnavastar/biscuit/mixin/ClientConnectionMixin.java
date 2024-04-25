@@ -30,9 +30,9 @@ public abstract class ClientConnectionMixin implements CookieJar, InternalStuff 
 
     public boolean biscuit$onCookie(Identifier cookieId, byte[] cookie) {
         CompletableFuture<byte[]> future = pendingCookieRequests.remove(cookieId);
-        if (future == null) return false;
+        if (future == null) return true;
         future.complete(cookie);
-        return true;
+        return false;
     }
 
     public CompletableFuture<byte[]> biscuit$getRawCookie(Identifier cookieId) {
@@ -47,11 +47,11 @@ public abstract class ClientConnectionMixin implements CookieJar, InternalStuff 
 
     @Override
     public void setCookie(Object cookie) {
-       Biscuit.setCookie(this, cookie);
+       Biscuit.setCookie((ClientConnection) (Object) this, cookie);
     }
 
     @Override
     public <T> CompletableFuture<T> getCookie(Class<T> cookieType) {
-        return Biscuit.getCookie(this, cookieType);
+        return Biscuit.getCookie((ClientConnection) (Object) this, cookieType);
     }
 }
