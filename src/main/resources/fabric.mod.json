@@ -9,7 +9,7 @@
     "repo": "https://github.com/MrNavaStar/Biscuit"
   },
   "license": "CC0-1.0",
-  "icon": "assets/biscuit/icon.png",
+  "icon": "assets/biscuit/biscuit.png",
   "environment": "*",
   "mixins": [
     "biscuit.mixins.json"
