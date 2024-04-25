@@ -12,7 +12,7 @@
   "icon": "assets/biscuit/icon.png",
   "environment": "*",
   "mixins": [
-    "transferapi.mixins.json"
+    "biscuit.mixins.json"
   ],
   "custom": {
     "loom:injected_interfaces": {
