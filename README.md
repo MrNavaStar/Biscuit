@@ -1,6 +1,6 @@
 # Biscuit!
 
-A simple api for working with 1.20.5 cookies in an easy and secure way!
+A simple API for working with 1.20.5 cookies in an easy and secure way!
 
 ## Features
 
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:biscuit:1.0.0")
+  modImplementation("maven.modrinth:biscuit!:1.0.0")
 }
 ```
 
