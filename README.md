@@ -5,6 +5,9 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G4DZF4D)
 
+<img src="https://raw.githubusercontent.com/MrNavaStar/Biscuit/master/src/main/resources/assets/biscuit/icon.png" width="300" height="300">
+
+
 # Biscuit!
 
 A simple API for working with 1.20.5 cookies in an easy and secure way!
