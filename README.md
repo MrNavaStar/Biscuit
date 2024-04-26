@@ -53,10 +53,10 @@ public static class TestCookie {
 }
 
 // Register the cookie:
-Biscuit.register(new Identifier("test", "cookie"), TestCookie.class).finish();
+Biscuit.register(new Identifier("test", "cookie"), TestCookie.class);
 
 // Register the cookie with a secret for tamper detection. The secret must be the same on all servers requesting this cookie:
-Biscuit.register(new Identifier("test", "cookie"), TestCookie.class).setSecret("my_secret").finish();
+Biscuit.register(new Identifier("test", "cookie"), TestCookie.class).setSecret("my_secret");
 
 // Set/Get the cookie from the ServerPlayerEntity, ClientConnection, or any of the network handlers (Not handshake)
 TestCookie cookie = new TestCookie("whoohoo!");
