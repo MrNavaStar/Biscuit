@@ -67,7 +67,7 @@ player.getCookie(TestCookie.class).whenComplete((cookie, throwable) -> {
 });
 ```
 
-Set a cookie before your mod (or another mod) transfers the player:
+Set a cookie before your mod (or another mod/the transfer command) transfers the player:
 ```java
 BiscuitEvents.PRE_TRANSFER.register((packet, profile, cookieJar, ci) -> {
     cookieJar.setCookie(cookie);
