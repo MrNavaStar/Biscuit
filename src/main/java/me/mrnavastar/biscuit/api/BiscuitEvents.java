@@ -38,9 +38,9 @@ public class BiscuitEvents {
         }
     });
 
-    public static final Event<PreTransfer> PRE_TRANSFER = EventFactory.createArrayBacked(PreTransfer.class, callbacks -> (packet, profile, ci) -> {
+    public static final Event<PreTransfer> PRE_TRANSFER = EventFactory.createArrayBacked(PreTransfer.class, callbacks -> (packet, profile, cookieJar, ci) -> {
         for (PreTransfer callback : callbacks) {
-            callback.onTransfer(packet, profile, ci);
+            callback.onTransfer(packet, profile, cookieJar, ci);
         }
     });
 
@@ -61,6 +61,6 @@ public class BiscuitEvents {
 
     @FunctionalInterface
     public interface PreTransfer {
-        void onTransfer(ServerTransferS2CPacket packet, GameProfile profile, CI ci);
+        void onTransfer(ServerTransferS2CPacket packet, GameProfile profile, CookieJar cookieJar, CI ci);
     }
 }

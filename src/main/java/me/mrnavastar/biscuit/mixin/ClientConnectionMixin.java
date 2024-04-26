@@ -2,6 +2,7 @@ package me.mrnavastar.biscuit.mixin;
 
 import me.mrnavastar.biscuit.InternalStuff;
 import me.mrnavastar.biscuit.api.BiscuitEvents;
+import me.mrnavastar.biscuit.api.CookieJar;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.PacketListener;
@@ -35,7 +36,7 @@ public abstract class ClientConnectionMixin implements InternalStuff {
         if (!(packet instanceof ServerTransferS2CPacket p)) return;
 
         BiscuitEvents.CI ci1 = new BiscuitEvents.CI();
-        BiscuitEvents.PRE_TRANSFER.invoker().onTransfer(p, ((InternalStuff) packetListener).biscuit$getUser(), ci1);
+        BiscuitEvents.PRE_TRANSFER.invoker().onTransfer(p, ((InternalStuff) packetListener).biscuit$getUser(), ((CookieJar) packetListener), ci1);
         if (ci1.isCanceled()) ci.cancel();
     }
 
