@@ -10,16 +10,16 @@
 
 # Biscuit!
 
-A simple API for working with 1.20.5 cookies in an easy and secure way!
+A simple API for working with 1.20.5 cookies and transfers in an easy and secure way!
 
 ## Features
 
 - [x] Cookies as POJOs
 - [x] Injected interfaces on many networking classes
 - [x] Cookie Signing for tamper detection
+- [x] Event system
 - [ ] Automatic identifier generation (May not be possbile)
 - [ ] Encryption
-- [ ] Events for cookie blocking
 - [ ] Spreading large data across many cookies
 
 # Setup

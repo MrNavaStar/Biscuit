@@ -1,8 +1,8 @@
 package me.mrnavastar.biscuit.mixin;
 
+import com.mojang.authlib.GameProfile;
 import me.mrnavastar.biscuit.InternalStuff;
 import me.mrnavastar.biscuit.api.CookieJar;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,16 +18,6 @@ public class ServerPlayerEntityMixin implements CookieJar, InternalStuff {
     @Shadow public ServerPlayNetworkHandler networkHandler;
 
     @Override
-    public void setCookie(Object cookie) {
-        networkHandler.setCookie(cookie);
-    }
-
-    @Override
-    public <T> CompletableFuture<T> getCookie(Class<T> cookieType) {
-        return networkHandler.getCookie(cookieType);
-    }
-
-    @Override
     public void biscuit$send(Packet<?> packet) {
         networkHandler.sendPacket(packet);
     }
@@ -35,5 +25,15 @@ public class ServerPlayerEntityMixin implements CookieJar, InternalStuff {
     @Override
     public CompletableFuture<byte[]> biscuit$getRawCookie(Identifier cookieId) {
         return ((InternalStuff) networkHandler).biscuit$getRawCookie(cookieId);
+    }
+
+    @Override
+    public GameProfile biscuit$getUser() {
+        return ((ServerPlayerEntity) (Object) this).getGameProfile();
+    }
+
+    @Override
+    public boolean wasTransferred() {
+        return networkHandler.wasTransferred();
     }
 }

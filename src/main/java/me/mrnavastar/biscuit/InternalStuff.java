@@ -1,5 +1,6 @@
 package me.mrnavastar.biscuit;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Identifier;
 
@@ -14,4 +15,8 @@ public interface InternalStuff {
     };
 
      CompletableFuture<byte[]> biscuit$getRawCookie(Identifier cookieId);
+
+     default GameProfile biscuit$getUser() {
+         return null;
+     }
 }

@@ -11,6 +11,9 @@
   "license": "CC0-1.0",
   "icon": "assets/biscuit/biscuit.png",
   "environment": "*",
+  "entrypoints": {
+    "server": ["me.mrnavastar.biscuit.api.Biscuit"]
+  },
   "mixins": [
     "biscuit.mixins.json"
   ],
