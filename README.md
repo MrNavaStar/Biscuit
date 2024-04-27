@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:biscuit!:1.0.0")
+  modImplementation("maven.modrinth:biscuit!:1.1.0")
 }
 ```
 
@@ -67,30 +67,9 @@ player.getCookie(TestCookie.class).whenComplete((cookie, throwable) -> {
 });
 ```
 
-## Examples
-
-Set a cookie before your mod (or another mod) transfers the player:
+Set a cookie before your mod (or another mod/the transfer command) transfers the player:
 ```java
 BiscuitEvents.PRE_TRANSFER.register((packet, profile, cookieJar, ci) -> {
     cookieJar.setCookie(cookie);
-});
-```
-
-Block any clients that have not been transferred:
-
-```java
-// This will block the majority of clients, however some bad actors may be sneaky and lie about being transferred.
-Biscuit.shouldKickNonTransferredConnections(true);
-
-// To address this issue, we can register a cookie that we set before transferring them and kick them if they don't have it. 
-// Just make sure to actually set this cookie on the other server before transferring them.
-Biscuit.register(new Identifier("my_mod", "some_cookie"), SomeCookie.class).setSecret("my_secret").kickIfMissing(true);
-
-// If you need to do additional filtering, you can use the MISSING_COOKIE event.
-BiscuitEvents.MISSING_COOKIE.register((registeredCookie, handler, server, ci) -> {
-    // Do some more things here.
-        
-    // Maybe you decide you actually do want the player to join (Perhaps they are an admin).
-    ci.canel();
 });
 ```
