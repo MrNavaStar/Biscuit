@@ -114,14 +114,29 @@ public class Biscuit implements DedicatedServerModInitializer {
         });
     }
 
+    /**
+     * Used to register an object as a cookie.
+     * @param identifier A unique id for your cookie. Best practice follows "mod-id:cookie-id".
+     * @param cookieType The class type of the object to register.
+     * @return A {@link RegisteredCookie} that can be used to modify settings related to this cookie.
+     */
     public static RegisteredCookie register(Identifier identifier, Class<?> cookieType) {
         return new RegisteredCookie(identifier, cookieType);
     }
 
+    /**
+     * Remove the object as a registered cookie.
+     * @param cookieType The class type of the object to unregister.
+     */
     public static void unregister(Class<?> cookieType) {
         registeredCookies.remove(cookieType);
     }
 
+    /**
+     * Used to block connections that are not transfers.
+     * <p></p><b>NOTE: Clients can lie about being transferred. See {@link CookieJar#wasTransferred()}.</b>
+     * @param shouldBlock Defaults to false.
+     */
     public static void shouldKickNonTransferredConnections(boolean shouldBlock) {
         blockNonTransferredConnections = shouldBlock;
     }
