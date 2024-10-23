@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import me.mrnavastar.biscuit.InternalStuff;
-import me.mrnavastar.biscuit.api.Biscuit;
 import me.mrnavastar.biscuit.api.CookieJar;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
